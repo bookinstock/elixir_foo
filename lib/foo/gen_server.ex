@@ -59,4 +59,43 @@ defmodule Foo.GenServer do
   def handle_call(:from, from, state) do
     {:reply, from, state}
   end
+
+  # def init(msg) do
+  #   {:ok, state}
+  #   {:ok, state, 5_000}
+  #   {:ok, state, :hibernate}
+  #   :ignore
+  # end
+
+  # def handle_call(msg, from, state) do
+  #   {:reply, reply, new_state}
+  #   {:reply, reply, new_state, 5_000}
+  #   {:reply, reply, new_state, :hibernate}
+  #   {:noreply, new_state}
+  #   {:noreply, new_state, 5_000}
+  #   {:noreply, new_state, :hibernate}
+  #   {:stop, reason*, reply, new_state}
+  #   {:stop, reason*, new_state}
+  # end
+
+  # def handle_cast(msg, state) do
+  #   {:noreply, new_state}
+  #   {:noreply, new_state, 5_000}
+  #   {:noreply, new_state, :hibernate}
+  #   {:stop, reason*, new_state}
+  # end
+
+  # def handle_info(msg, state) do
+  #   {:noreply, new_state}
+  #   {:noreply, new_state, 5_000}
+  #   {:noreply, new_state, :hibernate}
+  #   {:stop, reason*, new_state}
+  # end
+
+  # def terminate(reason, state) do
+  #   :normal
+  #   :shutdown
+  #   {:shutdown, term}
+  #   term
+  # end
 end

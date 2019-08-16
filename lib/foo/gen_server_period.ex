@@ -48,6 +48,7 @@ defmodule Foo.GenServerPeriod do
     state = %{state | number: execute_work(number)}
     state = %{state | current_count: current_count + 1}
     schedule_work()
+
     {:noreply, state}
   end
 
