@@ -48,8 +48,7 @@ defmodule Foo.GenServer do
     {:reply, nil, []}
   end
 
-  def handle_call(:pop, from, [head | tail]) do
-    IO.inspect(from)
+  def handle_call(:pop, _from, [head | tail]) do
     {:reply, head, tail}
   end
 
