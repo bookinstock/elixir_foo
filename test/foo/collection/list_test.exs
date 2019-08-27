@@ -1,26 +1,26 @@
 defmodule Foo.ListTest do
   use ExUnit.Case
 
-  test "Kernel ++" do
+  test "kernel ++" do
     assert [1, 2, 3] ++ [3, 4, 5] == [1, 2, 3, 3, 4, 5]
   end
 
-  test "Kernel --" do
+  test "kernel --" do
     assert [1, 2, 3] -- [0, 1, 2] == [3]
     assert [1, 2, 1] -- [1] == [2, 1]
   end
 
-  test "Kernel hd/1 and tl/1" do
+  test "kernel hd/1 and tl/1" do
     assert hd([1, 2, 3]) == 1
     assert tl([1, 2, 3]) == [2, 3]
   end
 
-  test "Kernel.in" do
+  test "kernel in" do
     assert 1 in [1, 2, 3] == true
     assert 0 in [1, 2, 3] == false
   end
 
-  test "Kernel.length/1" do
+  test "kernel length/1" do
     assert length([1, 2, 3]) == 3
   end
 
