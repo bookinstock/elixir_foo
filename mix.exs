@@ -14,7 +14,12 @@ defmodule Foo.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger],
+      env: [
+        env_foo: "Foo",
+        env_bar: "Bar"
+      ],
+      mod: {Foo.Application, [1, 2, 3]}
     ]
   end
 

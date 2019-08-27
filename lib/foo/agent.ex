@@ -25,8 +25,13 @@ defmodule Foo.Agent do
     Agent.stop(__MODULE__)
   end
 
-  # todo
   def alive? do
-    
+    pid = Process.whereis(__MODULE__)
+
+    if pid do
+      Process.alive?(pid)
+    else
+      false
+    end
   end
 end
