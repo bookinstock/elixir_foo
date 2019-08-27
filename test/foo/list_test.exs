@@ -32,7 +32,10 @@ defmodule Foo.ListTest do
     assert [1 | [2 | [3 | []]]] = [1, 2, 3]
   end
 
-  test "ascii print ?" do
+  test "ascii printable ?" do
+    assert Enum.to_list(32..126) |> List.ascii_printable?() == true
+    assert Enum.to_list(31..126) |> List.ascii_printable?() == false
+    assert Enum.to_list(32..127) |> List.ascii_printable?() == false
   end
 
   test "improper ?" do
@@ -99,6 +102,13 @@ defmodule Foo.ListTest do
   end
 
   test "delete" do
+    assert List.delete_at([1, 2, 3], 1) == [1, 3]
+    assert List.delete_at([1, 2, 3], -1) == [1, 2]
+    assert List.delete_at([1, 2, 3], 100) == [1, 2, 3]
+
+    assert List.delete([1, 2, 3], 1) == [2, 3]
+    assert List.delete([1, 2, 3], 100) == [1, 2, 3]
+    assert List.delete([1, 2, 3, 1], 1) == [2, 3, 1]
   end
 
   test "update" do
@@ -114,9 +124,18 @@ defmodule Foo.ListTest do
   end
 
   test "duplicate" do
+    assert List.duplicate("foo", 0) == []
+    assert List.duplicate("foo", 2) == ["foo", "foo"]
+    assert List.duplicate(["foo"], 2) == [["foo"], ["foo"]]
   end
 
   test "flatten" do
+    assert List.flatten([1, [2, [3]], 4]) == [1, 2, 3, 4]
+    assert List.flatten([[], [[]]]) == []
+    assert List.flatten([1, [2, [3]], 4], [5, 6, 7]) == [1, 2, 3, 4, 5, 6, 7]
+    assert List.flatten([], [1, 2, 3]) == [1, 2, 3]
+    assert List.flatten([1], [1, 2, 3]) == [1, 1, 2, 3]
+    assert List.flatten([[], [[]]], [[], [[]]]) == [[], [[]]]
   end
 
   test "zip" do
@@ -125,11 +144,11 @@ defmodule Foo.ListTest do
   end
 
   test "fold" do
-    assert List.foldl([1, 2, 3], 0, fn x, acc -> x - acc end) == 2
-    assert List.foldl([1, 2, 3], 10, fn x, acc -> x - acc end) == -8
+    assert List.foldl([1, 2, 3, 4], 0, fn x, acc -> x - acc end) == 2
+    assert List.foldl([1, 2, 3, 4], 10, fn x, acc -> x + acc end) == 20
 
-    assert List.foldr([1, 2, 3], 0, fn x, acc -> x - acc end) == 2
-    assert List.foldr([1, 2, 3], 10, fn x, acc -> x - acc end) == 8
+    assert List.foldr([1, 2, 3, 4], 0, fn x, acc -> x - acc end) == -2
+    assert List.foldr([1, 2, 3, 4], 10, fn x, acc -> x + acc end) == 20
   end
 
   test "myers" do
