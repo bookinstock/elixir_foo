@@ -18,7 +18,8 @@ defmodule Foo.MixProject do
       env: [
         test_foo: "Foo",
         test_bar: "Bar"
-      ]
+      ],
+      mod: {Foo.Application, [1, 2, 3]}
     ]
   end
 
