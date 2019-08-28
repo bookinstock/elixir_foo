@@ -1,9 +1,13 @@
 defmodule Foo.Collection.MapTest do
   use ExUnit.Case
 
-  test "kernel map_size" do
+  setup do
+    {:ok, %{map: %{a: 1, b: 2, c: 3}}}
+  end
+
+  test "kernel map_size", %{map: map} do
     assert map_size(%{}) == 0
-    assert map_size(%{a: 1, b: 2, c: 3}) == 3
+    assert map_size(map) == 3
   end
 
   test "new" do
@@ -14,14 +18,12 @@ defmodule Foo.Collection.MapTest do
     assert Map.new([a: 1, b: 2], fn {k, v} -> {k, v + 10} end) == %{a: 11, b: 12}
   end
 
-  test "access" do
-    map = %{a: 1, b: 2, c: 3}
-
+  test "access", %{map: map} do
     # []
     assert map[:a] == 1
     assert map[:d] == nil
 
-    # . -> need key exist
+    # . -> key exists
     assert map.a == 1
 
     # get
@@ -31,14 +33,12 @@ defmodule Foo.Collection.MapTest do
 
     # fetch (!)
     assert Map.fetch!(map, :a) == 1
-    assert {:ok, 1} = Map.fetch(map, :a)
-    assert :error = Map.fetch(map, :d)
+    assert Map.fetch(map, :a) == {:ok, 1}
+    assert Map.fetch(map, :d) == :error
   end
 
-  test "update" do
-    map = %{a: 1, b: 2, c: 3}
-
-    # | -> need key exist
+  test "update", %{map: map} do
+    # | -> key exists
     assert %{map | a: "foo"} == %{a: "foo", b: 2, c: 3}
 
     # put
@@ -55,22 +55,21 @@ defmodule Foo.Collection.MapTest do
     assert Map.update(map, :aa, "foo", fn v -> v + 1 end) == %{a: 1, b: 2, c: 3, aa: "foo"}
 
     # get_and_update (!)
-    assert {1, %{a: 2, b: 2, c: 3}} = Map.get_and_update!(map, :a, fn v -> {v, v + 1} end)
-    assert {1, %{b: 2, c: 3}} = Map.get_and_update!(map, :a, fn _ -> :pop end)
-    assert {1, %{a: 2, b: 2, c: 3}} = Map.get_and_update(map, :a, fn v -> {v, v + 1} end)
-    assert {1, %{b: 2, c: 3}} = Map.get_and_update(map, :a, fn _ -> :pop end)
-    assert {nil, %{a: 1, b: 2, c: 3}} = Map.get_and_update(map, :aa, fn _ -> :pop end)
+    assert Map.get_and_update!(map, :a, fn v -> {v, v + 1} end) == {1, %{a: 2, b: 2, c: 3}}
+    assert Map.get_and_update!(map, :a, fn _ -> :pop end) == {1, %{b: 2, c: 3}}
+    assert Map.get_and_update(map, :a, fn v -> {v, v + 1} end) == {1, %{a: 2, b: 2, c: 3}}
+    assert Map.get_and_update(map, :a, fn _ -> :pop end) == {1, %{b: 2, c: 3}}
+    assert Map.get_and_update(map, :aa, fn _ -> :pop end) == {nil, %{a: 1, b: 2, c: 3}}
 
-    assert {nil, %{a: 1, b: 2, c: 3}} =
-             Map.get_and_update(map, :aa, fn
-               v when is_integer(v) -> {v, v + 1}
-               _ -> :pop
-             end)
+    get_update_fn = fn
+      v when is_integer(v) -> {v, v + 1}
+      _ -> :pop
+    end
+
+    assert Map.get_and_update(map, :aa, get_update_fn) == {nil, %{a: 1, b: 2, c: 3}}
   end
 
-  test "delete" do
-    map = %{a: 1, b: 2, c: 3}
-
+  test "delete", %{map: map} do
     # delete
     assert Map.delete(map, :a) == %{b: 2, c: 3}
     assert Map.delete(map, :aa) == %{a: 1, b: 2, c: 3}
@@ -79,9 +78,9 @@ defmodule Foo.Collection.MapTest do
     assert Map.drop(map, [:a, :c, :aa]) == %{b: 2}
 
     # pop
-    assert {1, %{b: 2, c: 3}} = Map.pop(map, :a)
-    assert {nil, %{a: 1, b: 2, c: 3}} = Map.pop(map, :aa)
-    assert {"foo", %{a: 1, b: 2, c: 3}} = Map.pop(map, :aa, "foo")
+    assert Map.pop(map, :a) == {1, %{b: 2, c: 3}}
+    assert Map.pop(map, :aa) == {nil, %{a: 1, b: 2, c: 3}}
+    assert Map.pop(map, :aa, "foo") == {"foo", %{a: 1, b: 2, c: 3}}
   end
 
   test "lazy" do
@@ -95,23 +94,21 @@ defmodule Foo.Collection.MapTest do
     assert Map.pop_lazy(%{}, :a, fn -> "foo" end) == {"foo", %{}}
   end
 
-  test "replace!" do
-    assert Map.replace!(%{a: 1}, :a, "foo") == %{a: "foo"}
+  test "replace!", %{map: map} do
+    assert Map.replace!(map, :a, "foo") == %{a: "foo", b: 2, c: 3}
   end
 
   test "equal?" do
     assert Map.equal?(%{a: 1, b: 2}, %{b: 2, a: 1}) == true
   end
 
-  test "has key?" do
-    assert Map.has_key?(%{a: 1, b: 2}, :a) == true
-    assert Map.has_key?(%{a: 1, b: 2}, :c) == false
+  test "has key?", %{map: map} do
+    assert Map.has_key?(map, :a) == true
+    assert Map.has_key?(map, :aa) == false
   end
 
-  test "keys and values" do
+  test "keys and values", %{map: map} do
     # runs in linear time
-    map = %{a: 1, b: 2, c: 3}
-
     assert Map.keys(map) == [:a, :b, :c]
     assert Map.values(map) == [1, 2, 3]
   end
@@ -121,33 +118,27 @@ defmodule Foo.Collection.MapTest do
   end
 
   test "from struct" do
-    assert Map.from_struct(%TestUser{name: "foo", age: 18}) == %{name: "foo", age: 18}
     assert Map.from_struct(TestUser) == %{name: nil, age: nil}
+
+    assert Map.from_struct(%TestUser{name: "foo", age: 18}) == %{name: "foo", age: 18}
   end
 
   test "merge" do
     assert Map.merge(%{a: 1, b: 2}, %{b: 1, c: 2}) == %{a: 1, b: 1, c: 2}
 
-    assert Map.merge(%{a: 1, b: 2}, %{b: 1, c: 2}, fn _k, v1, v2 -> v1 + v2 end) == %{
-             a: 1,
-             b: 3,
-             c: 2
-           }
+    merge_fn = fn _k, v1, v2 -> v1 + v2 end
+    assert Map.merge(%{a: 1, b: 2}, %{b: 1, c: 2}, merge_fn) == %{a: 1, b: 3, c: 2}
   end
 
-  test "take" do
-    map = %{a: 1, b: 2, c: 3}
-
-    assert Map.take(map, [:a, :c]) == %{a: 1, c: 3}
-    assert Map.take(map, [:aa, :cc]) == %{}
+  test "take", %{map: map} do
+    assert Map.take(map, [:a, :c, :d]) == %{a: 1, c: 3}
   end
 
-  test "split" do
-    assert Map.split(%{a: 1, b: 2, c: 3}, [:a, :c, :d]) == {%{a: 1, c: 3}, %{b: 2}}
+  test "split", %{map: map} do
+    assert Map.split(map, [:a, :c, :d]) == {%{a: 1, c: 3}, %{b: 2}}
   end
 
-  test "convert" do
-    # to_list
-    assert Map.to_list(%{a: 1, b: 2}) == [a: 1, b: 2]
+  test "convert to list", %{map: map} do
+    assert Map.to_list(map) == [a: 1, b: 2, c: 3]
   end
 end
