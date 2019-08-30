@@ -1,5 +1,5 @@
 defmodule Foo.ListTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   test "kernel ++" do
     assert [1, 2, 3] ++ [3, 4, 5] == [1, 2, 3, 3, 4, 5]
@@ -16,8 +16,8 @@ defmodule Foo.ListTest do
   end
 
   test "kernel in" do
-    assert 1 in [1, 2, 3] == true
-    assert 0 in [1, 2, 3] == false
+    assert 1 in [1, 2, 3]
+    refute 0 in [1, 2, 3]
   end
 
   test "kernel length/1" do
@@ -33,21 +33,21 @@ defmodule Foo.ListTest do
   end
 
   test "ascii printable ?" do
-    assert Enum.to_list(32..126) |> List.ascii_printable?() == true
-    assert Enum.to_list(31..126) |> List.ascii_printable?() == false
-    assert Enum.to_list(32..127) |> List.ascii_printable?() == false
+    assert Enum.to_list(32..126) |> List.ascii_printable?()
+    refute Enum.to_list(31..126) |> List.ascii_printable?()
+    refute Enum.to_list(32..127) |> List.ascii_printable?()
   end
 
   test "improper ?" do
-    assert List.improper?([1, 2, 3]) == false
-    assert List.improper?([1, 2 | 3]) == true
+    assert List.improper?([1, 2 | 3])
+    refute List.improper?([1, 2, 3])
   end
 
   test "start with ?" do
-    assert List.starts_with?([1, 2, 3], [1]) == true
-    assert List.starts_with?([1, 2, 3], [1, 2]) == true
-    assert List.starts_with?([1, 2, 3], [2, 1]) == false
-    assert List.starts_with?([1, 2, 3], []) == true
+    assert List.starts_with?([1, 2, 3], [1])
+    assert List.starts_with?([1, 2, 3], [1, 2])
+    refute List.starts_with?([1, 2, 3], [2, 1])
+    assert List.starts_with?([1, 2, 3], [])
   end
 
   test "convert" do
@@ -157,9 +157,9 @@ defmodule Foo.ListTest do
   end
 
   test "list of tuples" do
-    assert List.keymember?([a: 1, b: 2], :a, 0) == true
-    assert List.keymember?([a: 1, b: 2], 1, 1) == true
-    assert List.keymember?([a: 1, b: 2], :c, 0) == false
+    assert List.keymember?([a: 1, b: 2], :a, 0)
+    assert List.keymember?([a: 1, b: 2], 1, 1)
+    refute List.keymember?([a: 1, b: 2], :c, 0)
 
     assert List.keyfind([a: 1, b: 2], :a, 0) == {:a, 1}
     assert List.keyfind([a: 1, b: 2], 1, 1) == {:a, 1}

@@ -1,5 +1,5 @@
 defmodule Foo.Collection.MapTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   setup do
     {:ok, %{map: %{a: 1, b: 2, c: 3}}}
@@ -99,12 +99,12 @@ defmodule Foo.Collection.MapTest do
   end
 
   test "equal?" do
-    assert Map.equal?(%{a: 1, b: 2}, %{b: 2, a: 1}) == true
+    assert Map.equal?(%{a: 1, b: 2}, %{b: 2, a: 1})
   end
 
   test "has key?", %{map: map} do
-    assert Map.has_key?(map, :a) == true
-    assert Map.has_key?(map, :aa) == false
+    assert Map.has_key?(map, :a)
+    refute Map.has_key?(map, :aa)
   end
 
   test "keys and values", %{map: map} do
