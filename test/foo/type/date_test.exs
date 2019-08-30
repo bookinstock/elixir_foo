@@ -90,7 +90,7 @@ defmodule Foo.Type.Date do
   end
 
   test "today" do
-    assert Date.utc_today
+    assert Date.utc_today()
   end
 
   test "from erlang" do

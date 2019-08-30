@@ -15,15 +15,15 @@ defmodule Foo.Type.BitwiseTest do
   end
 
   test "operator xor" do
-    assert (1 ^^^ 1) == 0
+    assert 1 ^^^ 1 == 0
   end
 
   test "operator left shift" do
-    assert (1 <<< 1) == 2
+    assert 1 <<< 1 == 2
   end
 
   test "operator right shift" do
-    assert (1 >>> 1) == 0
+    assert 1 >>> 1 == 0
   end
 
   test "function and" do
