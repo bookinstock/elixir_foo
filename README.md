@@ -19,3 +19,11 @@ Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_do
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/foo](https://hexdocs.pm/foo).
 
+## TODOs
+
+check sources
+
+- Kernel
+    + get_in
+    + get_and_update_in
+        * https://github.com/elixir-lang/elixir/blob/v1.9.1/lib/elixir/lib/kernel.ex#L2246
