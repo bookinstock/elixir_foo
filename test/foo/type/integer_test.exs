@@ -47,14 +47,14 @@ defmodule IntegerTest do
   end
 
   test "floor div" do
-    assert Integer.floor_div(10, 3) == 1
-    assert Integer.floor_div(10, -3) == -2
-    assert div(10, -3) == -1
+    assert Integer.floor_div(10, 3) == 3
+    assert Integer.floor_div(10, -3) == -4
+    assert div(10, -3) == -3
   end
 
   test "modulo remainder" do
     assert Integer.mod(7, 3) == 1
-    assert Integer.mod(7, -3) == -1
+    assert Integer.mod(7, -3) == -2
   end
 
   test "greatest common divisor" do
@@ -64,13 +64,11 @@ defmodule IntegerTest do
   end
 
   test "convert to charlist" do
-    assert Integer.to_string(1) == '1'
-    assert Integer.to_string(12, 16) == '18'
+    assert Integer.to_charlist(1) == '1'
   end
 
   test "convert to string" do
     assert Integer.to_string(1) == "1"
-    assert Integer.to_string(12, 16) == "18"
   end
 
   test "digits" do
@@ -80,8 +78,8 @@ defmodule IntegerTest do
   end
 
   test "undigits" do
-    assert Integer.undigits [] == 0
-    assert Integer.undigits [1,2] == 12
-    assert Integer.undigits [1,2], 16 == 18
+    assert Integer.undigits([]) == 0
+    assert Integer.undigits([1, 2]) == 12
+    assert Integer.undigits([1, 2], 16) == 18
   end
 end
