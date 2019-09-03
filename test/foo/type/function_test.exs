@@ -5,7 +5,7 @@ defmodule FunctionTest do
     f = Function.capture(String, :length, 1)
     assert is_function(f)
 
-    f2 = &(String.length/1)
+    f2 = &String.length/1
     assert f == f2
   end
 
